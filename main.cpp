@@ -23,6 +23,8 @@ int GEN_NUMBER; // ilość pokoleń
 int PROB_CROSSING; // prawdopodobieństwo krzyżowania
 int PROB_MUTATION; // prawdopodobieństwo mutacji
 
+int TOURNAMENT_SIZE; // rozmiar turnieju
+
 struct specimen { // pojedynczy osobnik populacji
 	std::vector<int> v; // tablica kolejności kafelków dla osobnika - pierwsza składowa chromosomu
 	std::vector<bool> r; // tablica odbicia lustrzanego kafelków z wektora v (true dla odbicia, false dla oryginalnego obrazka) - druga składowa chromosomu
@@ -83,6 +85,10 @@ int main(int argc, char* argv[]) {
 	}
 
 	POP_SIZE = readParameter("Podaj rozmiar populacji", 300, true);
+	
+	TOURNAMENT_SIZE = POP_SIZE / 10; // domyślny rozmiar turnieju: 1/10 populacji
+	TOURNAMENT_SIZE = readPercent("Podaj rozmiar turnieju", TOURNAMENT_SIZE);
+	
 	PROB_CROSSING = readPercent("Podaj prawdopodobieństwo krzyżowania", 95);
 	PROB_MUTATION = readPercent("Podaj prawdopodobieństwo mutacji", 2);
 
@@ -243,7 +249,7 @@ int tournament(std::vector<specimen> &specimens) {
 		if (std::find(selectedNumbers.begin(), selectedNumbers.end(), i) == selectedNumbers.end()) { // jeśli tablica numerów nie zawiera wylosowanej liczby
 			selectedNumbers.push_back(i);
 		}
-	} while (selectedNumbers.size() < POP_SIZE / 10); // turniej na 1/10 losowo wybranej części populacji
+	} while (selectedNumbers.size() < TOURNAMENT_SIZE);
 
 	int bestSpecimen = selectedNumbers[0]; // najlepszy osobnik wybrany do turnieju - zwyciężca
 
